@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from './classes/App';
 import reportWebVitals from './reportWebVitals';
+import Header from './classes/Header';
+import BaseSalInfo from './classes/BaseSalInfo';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Header></Header>
+    <BaseSalInfo></BaseSalInfo>
   </React.StrictMode>
 );
 

@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+
+
+.biiContent {
+  text-align:right;
+}
+
+
+.calculateDiv {
+  text-align: center;
+  background-color: aquamarine;
+  cursor: pointer;
+}
