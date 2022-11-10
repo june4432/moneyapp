@@ -28,7 +28,7 @@ class BaseSalInfo extends React.Component {
                 
               </IconButton>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                2022년 실지급액 계산기 😎
+                2022년 실수령액 계산기 😎
               </Typography>
               {/* <Button color="inherit">Login</Button> */}
             </Toolbar>
