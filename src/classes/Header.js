@@ -11,6 +11,7 @@ class BaseSalInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {name: 'YoungJun'};
+        //jenkins-github 연동 test commit
       }
 
     render() {
