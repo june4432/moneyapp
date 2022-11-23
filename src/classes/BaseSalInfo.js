@@ -93,8 +93,21 @@ class BaseSalInfo extends React.Component {
         const localIncomeTaxAmount = Math.floor(incomeTaxAmount * 0.1 / 10) * 10;
 
         //연금 및 보험료, 공제금액 총액
-        const natlPensionAmount = Math.floor(taxableSalary * this.state.natlPensionRate / 10) * 10;
-        const healthInsuranceAmount = Math.floor(taxableSalary * this.state.healthInsuranceRate / 10) * 10;
+        //국민연금 보수월액 계산
+        const natlPensionLowLimitMon = 350000;
+        const natlPensionHighLimitMon = 5530000;
+        const natlPensionTargetMon = taxableSalary < natlPensionLowLimitMon ? natlPensionLowLimitMon 
+                                      : taxableSalary > natlPensionHighLimitMon ? natlPensionHighLimitMon : taxableSalary;
+        
+        //건강보험 보수월액 계산
+        const healthInsuranceLowLimitMon = 279256;
+        const healthInsuranceHighLimitMon = 104536481;
+        const healthInsuranceTargetMon = taxableSalary < healthInsuranceLowLimitMon ? healthInsuranceLowLimitMon
+                                          : taxableSalary > healthInsuranceHighLimitMon ? healthInsuranceHighLimitMon : taxableSalary;
+
+
+        const natlPensionAmount = Math.floor(natlPensionTargetMon * this.state.natlPensionRate / 10) * 10;
+        const healthInsuranceAmount = Math.floor(healthInsuranceTargetMon * this.state.healthInsuranceRate / 10) * 10;
         const longTermCareInsuranceAmount = Math.floor(healthInsuranceAmount * this.state.longTermCareInsuranceRate / 10) * 10;
         const hiringInsuranceAmount = Math.floor(taxableSalary * this.state.hiringInsuranceRate / 10) * 10;
         const deductedAmount = (incomeTaxAmount
