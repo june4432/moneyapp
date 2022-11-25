@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "실수령액 계산기",
+  "name": "2022년 근로소득자 실수령액 계산기",
   "icons": [
     {
       "src": "favicon.ico",
