@@ -51,3 +51,12 @@
   background-color: aquamarine;
   cursor: pointer;
 }
+
+
+.initButton {
+  width:50%
+}
+
+.calcButton {
+  width:50%
+}

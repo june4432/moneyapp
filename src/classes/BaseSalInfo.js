@@ -8,6 +8,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import TaxCalculator from './TaxCalculator';
+import NatlPensionCalculator from './NatlPensionCalculator';
+import HealthInsuranceCalculator from './HealthInsuranceCalculator';
+import HiringInsuranceCalculator from './HiringInsuranceCalculator';
+
+
 
 class BaseSalInfo extends React.Component {
 
@@ -62,7 +68,6 @@ class BaseSalInfo extends React.Component {
     }
 
     handleChange_taxRate(event){
-        console.log(event.target.value);
         this.setState({"taxRate":event.target.value});
     }
 
@@ -70,84 +75,24 @@ class BaseSalInfo extends React.Component {
         event.preventDefault();
         
         let taxableSalary = this.state.taxableSalary;
-        const taxPeriodArray = this.state.taxTable['taxtable'].filter(function(elem){
-            return (taxableSalary < elem.maximum && taxableSalary >= elem.minimum)
-        });
 
-        //1천 초과 소득일 경우 1천에 해당하는 세금
-        const taxOver100Million = taxableSalary > 10000000 ? 
-                                    Number(taxPeriodArray[0].defaultTaxAmount)
-                                    + Math.ceil(((Number(taxableSalary) - Number(taxPeriodArray[0].minimum)-1) * Number(taxPeriodArray[0].salaryAdjustRate) * Number(taxPeriodArray[0].taxRate))/10)*10 : 0;
+    }
 
-        //총부양가족수
-        const totalFamilyCount = Number(this.state.familyCount) + Number(this.state.child7to20Count);
-        
-        //부양가족수에 따른 세액
-        const taxByFamilyCount = totalFamilyCount > 11 ? Number(taxPeriodArray[0].tax[10]) - ((Number(taxPeriodArray[0].tax[9])-Number(taxPeriodArray[0].tax[10])) * (totalFamilyCount - 11))
-                                    : taxPeriodArray[0].tax[totalFamilyCount-1];
+    setStateAmount = (deductType, deductAmount) => {
+        console.log(deductType + " => " + deductAmount);
 
-        //소득세 총합        
-        const incomeTaxAmount = (taxOver100Million + taxByFamilyCount) * (this.state.taxRate / 100 );
-        
-        //근로주민세
-        const localIncomeTaxAmount = Math.floor(incomeTaxAmount * 0.1 / 10) * 10;
-
-        //연금 및 보험료, 공제금액 총액
-        //국민연금 보수월액 계산
-        const natlPensionLowLimitMon = 350000;
-        const natlPensionHighLimitMon = 5530000;
-        const natlPensionTargetMon = taxableSalary < natlPensionLowLimitMon ? natlPensionLowLimitMon 
-                                      : taxableSalary > natlPensionHighLimitMon ? natlPensionHighLimitMon : taxableSalary;
-        
-        //건강보험 보수월액 계산
-        const healthInsuranceLowLimitMon = 279256;
-        const healthInsuranceHighLimitMon = 104536481;
-        const healthInsuranceTargetMon = taxableSalary < healthInsuranceLowLimitMon ? healthInsuranceLowLimitMon
-                                          : taxableSalary > healthInsuranceHighLimitMon ? healthInsuranceHighLimitMon : taxableSalary;
-
-
-        const natlPensionAmount = Math.floor(natlPensionTargetMon * this.state.natlPensionRate / 10) * 10;
-        const healthInsuranceAmount = Math.floor(healthInsuranceTargetMon * this.state.healthInsuranceRate / 10) * 10;
-        const longTermCareInsuranceAmount = Math.floor(healthInsuranceAmount * this.state.longTermCareInsuranceRate / 10) * 10;
-        const hiringInsuranceAmount = Math.floor(taxableSalary * this.state.hiringInsuranceRate / 10) * 10;
-        const deductedAmount = (incomeTaxAmount
-                                + localIncomeTaxAmount
-                                + natlPensionAmount
-                                + healthInsuranceAmount
-                                + longTermCareInsuranceAmount
-                                + hiringInsuranceAmount)
-
-        //실지급금액                                
-        const actualMoney = this.state.totalSalary - deductedAmount;
-
-        //ajax 혹은 다른 펑션을 타고 와서 소득세 주민세 보험료를 계산한 값을 리턴하고 setState를 통해 처리하도록 한다.
-        this.setState({
-            incomeTaxAmount : incomeTaxAmount,
-            localIncomeTaxAmount : localIncomeTaxAmount,
-            natlPensionAmount : natlPensionAmount,
-            healthInsuranceAmount : healthInsuranceAmount,
-            longTermCareInsuranceAmount : longTermCareInsuranceAmount,
-            hiringInsuranceAmount : hiringInsuranceAmount,
-            deductedAmount : deductedAmount,
-            actualMoney : actualMoney
-        })
+        //this.setState({deductAmount});
     }
 
     render() {
-        const totalSalary = this.state.totalSalary;
-        const nonTaxableSalary = this.state.nonTaxableSalary;
-        const familyCount = this.state.familyCount;
-        const child7to20Count = this.state.child7to20Count;
-        const taxRate = this.state.taxRate;
+        const totalSalary = this.props.totalSalary == NaN ? 0 : this.state.totalSalary;
+        const nonTaxableSalary = this.props.nonTaxableSalary == NaN ? 0 : this.state.nonTaxableSalary;
+        const familyCount = this.props.familyCount == NaN ? 0 : this.state.familyCount;
+        const child7to20Count = this.props.child7to20Count == NaN ? 0 : this.state.child7to20Count;
+        const taxRate = this.props.taxRate == NaN ? 0 : this.state.taxRate;
         const taxableSalary = this.state.taxableSalary;
-        const incomeTaxAmount = this.state.incomeTaxAmount
-        const localIncomeTaxAmount = this.state.localIncomeTaxAmount
-        const natlPensionAmount = this.state.natlPensionAmount;
-        const healthInsuranceAmount = this.state.healthInsuranceAmount;
-        const longTermCareInsuranceAmount = this.state.longTermCareInsuranceAmount;
-        const hiringInsuranceAmount = this.state.hiringInsuranceAmount;
-        const deductedAmount = this.state.deductedAmount;
-        const actualMoney = this.state.actualMoney;
+        const deductAmount = (this.state.incomeTaxAmount);
+        console.log("deductedAmount : " + deductAmount);
         return (
             <Box>
                 <Toolbar />
@@ -177,30 +122,46 @@ class BaseSalInfo extends React.Component {
                         </fieldset>
                     </div>
                     <Button 
+                        className="initButton" 
+                        variant="contained" 
+                        onClick={this.handleChange_calculateMoney}
+                        size="large"
+                        color="warning"
+                    >초기화</Button>
+                    <Button 
                         className="calcButton" 
                         variant="contained" 
-                        fullWidth={true}
                         onClick={this.handleChange_calculateMoney}
+                        size="large"
                     >계산하기</Button>
                     <div>
                         <fieldset>
-                            <legend>계산결과</legend>
-                            <fieldset>
-                                <legend>공제금액</legend>
-                                <BaseInfoInput title="소득세" id="incomeTaxAmount" value={incomeTaxAmount} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
-                                <BaseInfoInput title="지방소득세" id="localIncomeTaxAmount" value={localIncomeTaxAmount} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
-                                <BaseInfoInput title="국민연금" id="natlPensionAmount" value={natlPensionAmount} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
-                                <BaseInfoInput title="건강보험" id="healthInsuranceAmount" value={healthInsuranceAmount} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
-                                <BaseInfoInput title="장기요양보험" id="longTermCareInsuranceAmount" value={longTermCareInsuranceAmount} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
-                                <BaseInfoInput title="고용보험" id="hiringInsuranceAmount" value={hiringInsuranceAmount} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
-                            </fieldset>
-                            <fieldset>
-                                <legend>요약</legend>
-                                <BaseInfoInput title="공제액합계" id="deductedAmount" value={deductedAmount} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
-                                <BaseInfoInput title="실지급액" id="actualMoney" value={actualMoney} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
-                            </fieldset>
+                            <legend>공제금액</legend>
+                            <TaxCalculator 
+                                taxableSalary={taxableSalary}
+                                familyCount={familyCount}
+                                child7to20Count={child7to20Count}
+                                taxRate={taxRate}
+                                setStateAmount={this.setStateAmount}
+                            ></TaxCalculator>
+                            <NatlPensionCalculator 
+                                taxableSalary={taxableSalary}
+                                setStateAmount={this.setStateAmount}
+                            ></NatlPensionCalculator>
+                            <HealthInsuranceCalculator 
+                                taxableSalary={taxableSalary}
+                                setStateAmount={this.setStateAmount}
+                            ></HealthInsuranceCalculator>
+                            <HiringInsuranceCalculator 
+                                taxableSalary={taxableSalary}
+                                setStateAmount={this.setStateAmount}
+                            ></HiringInsuranceCalculator>
                         </fieldset>
-                        
+                        {/* <fieldset>
+                            <legend>요약</legend>
+                            <BaseInfoInput title="공제액합계" id="deductedAmount" value={deductedAmount} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
+                            <BaseInfoInput title="실지급액" id="actualMoney" value={actualMoney} onNumberChange={this.handleChange_taxRate} disabledInput={true} ></BaseInfoInput>
+                        </fieldset> */}
                     </div>
                 </div>
             </Box>
