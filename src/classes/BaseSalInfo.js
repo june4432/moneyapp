@@ -1,13 +1,12 @@
 import * as React from 'react';
 import BaseInfoInput from './BaseInfoInput';
-import taxTable from '../tax_table.json';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import Toolbar from '@mui/material/Toolbar';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import TaxCalculator from './TaxCalculator';
 import NatlPensionCalculator from './NatlPensionCalculator';
 import HealthInsuranceCalculator from './HealthInsuranceCalculator';
@@ -20,11 +19,6 @@ class BaseSalInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            taxTable : taxTable,
-            natlPensionRate : 0.045,
-            healthInsuranceRate : 0.03495,
-            longTermCareInsuranceRate : 0.1227,
-            hiringInsuranceRate : 0.009,
             totalSalary : 0,
             nonTaxableSalary : 0,
             familyCount : 1,
@@ -59,12 +53,15 @@ class BaseSalInfo extends React.Component {
                       ,taxableSalary:this.state.totalSalary-nonTaxableSalary});
     }
 
-    handleChange_familyCount(familyCount){
-        this.setState({familyCount});
+    handleChange_familyCount(event){
+        //this.setState({familyCount});
+        console.log(event.target.value);
+        this.setState({"familyCount":event.target.value});
     }
 
-    handleChange_child7to20Count(child7to20Count){
-        this.setState({child7to20Count});
+    handleChange_child7to20Count(event){
+        //this.setState({child7to20Count});
+        this.setState({"child7to20Count":event.target.value});
     }
 
     handleChange_taxRate(event){
@@ -85,14 +82,13 @@ class BaseSalInfo extends React.Component {
     }
 
     render() {
-        const totalSalary = this.props.totalSalary == NaN ? 0 : this.state.totalSalary;
-        const nonTaxableSalary = this.props.nonTaxableSalary == NaN ? 0 : this.state.nonTaxableSalary;
-        const familyCount = this.props.familyCount == NaN ? 0 : this.state.familyCount;
-        const child7to20Count = this.props.child7to20Count == NaN ? 0 : this.state.child7to20Count;
-        const taxRate = this.props.taxRate == NaN ? 0 : this.state.taxRate;
+        const totalSalary = isNaN(this.state.totalSalary) ? 0 : this.state.totalSalary;
+        const nonTaxableSalary = isNaN(this.state.nonTaxableSalary) ? 0 : this.state.nonTaxableSalary;
+        const familyCount = isNaN(this.state.familyCount) ? 1 : this.state.familyCount;
+        const child7to20Count = isNaN(this.state.child7to20Count) ? 0 : this.state.child7to20Count;
+        const taxRate = isNaN(this.state.taxRate) ? 0 : this.state.taxRate;
         const taxableSalary = this.state.taxableSalary;
         const deductAmount = (this.state.incomeTaxAmount);
-        console.log("deductedAmount : " + deductAmount);
         return (
             <Box>
                 <Toolbar />
@@ -103,7 +99,50 @@ class BaseSalInfo extends React.Component {
                             <BaseInfoInput title="월급여" id="totalSalary" value={totalSalary} onNumberChange={this.handleChange_totalSalary} disabledInput={false}></BaseInfoInput>
                             <BaseInfoInput title="비과세" id="nonTaxableSalary" value={nonTaxableSalary} onNumberChange={this.handleChange_nonTaxableSalary} disabledInput={false} ></BaseInfoInput>
                             <BaseInfoInput title="과세대상금액" value={taxableSalary}disabledInput={true} ></BaseInfoInput>
-                            <BaseInfoInput title="부양가족수" id="familyCount" value={familyCount} onNumberChange={this.handleChange_familyCount} disabledInput={false} ></BaseInfoInput>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">부양가족수</InputLabel>
+                            <Select
+                                    labelId="demo-simple-select-label"
+                                    id="familyCount"
+                                    value={familyCount}
+                                    label="부양가족수"
+                                    onChange={this.handleChange_familyCount}
+                                >
+                                    <MenuItem value={1}>1명</MenuItem>
+                                    <MenuItem value={2}>2명</MenuItem>
+                                    <MenuItem value={3}>3명</MenuItem>
+                                    <MenuItem value={4}>4명</MenuItem>
+                                    <MenuItem value={5}>5명</MenuItem>
+                                    <MenuItem value={6}>6명</MenuItem>
+                                    <MenuItem value={7}>7명</MenuItem>
+                                    <MenuItem value={8}>8명</MenuItem>
+                                    <MenuItem value={9}>9명</MenuItem>
+                                    <MenuItem value={10}>10명</MenuItem>
+                                    <MenuItem value={11}>11명</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">7~20세 자녀수</InputLabel>
+                            <Select
+                                    labelId="demo-simple-select-label"
+                                    id="child7to20Count"
+                                    value={child7to20Count}
+                                    label="7~20세 자녀수"
+                                    onChange={this.handleChange_child7to20Count}
+                                >
+                                    <MenuItem value={0}>0명</MenuItem>
+                                    <MenuItem value={1}>1명</MenuItem>
+                                    <MenuItem value={2}>2명</MenuItem>
+                                    <MenuItem value={3}>3명</MenuItem>
+                                    <MenuItem value={4}>4명</MenuItem>
+                                    <MenuItem value={5}>5명</MenuItem>
+                                    <MenuItem value={6}>6명</MenuItem>
+                                    <MenuItem value={7}>7명</MenuItem>
+                                    <MenuItem value={8}>8명</MenuItem>
+                                    <MenuItem value={9}>9명</MenuItem>
+                                    <MenuItem value={10}>10명</MenuItem>
+                                </Select>
+                            </FormControl>
                             <BaseInfoInput title="7~20세 자녀수" id="child7to20Count" value={child7to20Count} onNumberChange={this.handleChange_child7to20Count} disabledInput={false} ></BaseInfoInput>
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">원천징수세율</InputLabel>

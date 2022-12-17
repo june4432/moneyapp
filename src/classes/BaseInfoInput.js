@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 
@@ -10,7 +9,6 @@ class BaseInfoInput extends React.Component {
       }
 
     handleChange(event) {
-        //this.setState({value:event.target.value.replace(/[^0-9]/g, '')})
         this.props.onNumberChange(event.target.value.replace(/[^0-9]/g, ''));
 
     }

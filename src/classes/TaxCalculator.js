@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import TextField from '@mui/material/TextField';
 import BaseInfoInput from './BaseInfoInput';
 import taxTable from '../tax_table.json';
 
@@ -23,9 +21,9 @@ class TaxCalculator extends React.Component {
 
     render() {
 
-        const taxableSalary = this.props.taxableSalary == NaN ? 0 : this.props.taxableSalary;
-        const familyCount = this.props.familyCount == NaN ? 0 : this.props.familyCount;
-        const child7to20Count = this.props.child7to20Count == NaN ? 0 : this.props.child7to20Count;
+        const taxableSalary = isNaN(this.props.taxableSalary) ? 0 : this.props.taxableSalary;
+        const familyCount = isNaN(this.props.familyCount) ? 0 : this.props.familyCount;
+        const child7to20Count = isNaN(this.props.child7to20Count) ? 0 : this.props.child7to20Count;
         const taxRate = this.props.taxRate;
         const taxPeriodArray = this.state.taxTable['taxtable'].filter(function(elem){
             return (taxableSalary < elem.maximum && taxableSalary >= elem.minimum)

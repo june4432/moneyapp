@@ -1,8 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import TextField from '@mui/material/TextField';
 import BaseInfoInput from './BaseInfoInput';
-import taxTable from '../tax_table.json';
 
 class NatlPensionCalculator extends React.Component {
     constructor(props) {
@@ -21,11 +18,11 @@ class NatlPensionCalculator extends React.Component {
 
     render() {
 
-        const taxableSalary = this.props.taxableSalary == NaN ? 0 : this.props.taxableSalary;
+        const taxableSalary = isNaN(this.props.taxableSalary) ? 0 : this.props.taxableSalary;
         const natlPensionTargetMon = taxableSalary < this.state.natlPensionLowLimitMon ? this.state.natlPensionLowLimitMon 
                                       : taxableSalary > this.state.natlPensionHighLimitMon ? this.state.natlPensionHighLimitMon : taxableSalary;
 
-        const natlPensionAmount = taxableSalary == 0 ? 0 : Math.floor((natlPensionTargetMon * this.state.natlPensionRate).toFixed(0) / 10) * 10;
+        const natlPensionAmount = taxableSalary === 0 ? 0 : Math.floor((natlPensionTargetMon * this.state.natlPensionRate).toFixed(0) / 10) * 10;
 
         return (
             <div className="formControl">

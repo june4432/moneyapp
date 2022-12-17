@@ -1,8 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import TextField from '@mui/material/TextField';
 import BaseInfoInput from './BaseInfoInput';
-import taxTable from '../tax_table.json';
 
 class HiringInsuranceCalculator extends React.Component {
     constructor(props) {
@@ -21,11 +18,11 @@ class HiringInsuranceCalculator extends React.Component {
 
     render() {
 
-        const taxableSalary = this.props.taxableSalary == NaN ? 0 : this.props.taxableSalary;
+        const taxableSalary = isNaN(this.props.taxableSalary) ? 0 : this.props.taxableSalary;
         const hiringInsuranceTargetMon = taxableSalary < this.state.hiringInsuranceLowLimitMon ? this.state.hiringInsuranceLowLimitMon
                                           : taxableSalary > this.state.hiringInsuranceHighLimitMon ? this.state.hiringInsuranceHighLimitMon : taxableSalary;
 
-        const hiringInsuranceAmount = taxableSalary == 0 ? 0 : Math.floor( (hiringInsuranceTargetMon * this.state.hiringInsuranceRate).toFixed(0) / 10) * 10;
+        const hiringInsuranceAmount = taxableSalary === 0 ? 0 : Math.floor( (hiringInsuranceTargetMon * this.state.hiringInsuranceRate).toFixed(0) / 10) * 10;
 
         return (
             <div className="formControl">
